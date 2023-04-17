@@ -1,61 +1,38 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { IGame } from "../models/IGame";
 
 const randomPlayer = () => (Math.random() > 0.5 ? "X" : "O");
-const playerX = JSON.stringify(localStorage.getItem("playerX"));
-const playerO = JSON.stringify(localStorage.getItem("playerO"));
-let currentPlayerState = ref("");
-let symbolState = ref("");
-let id = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+interface IGameProps {
+  index: number;
+  game: IGame;
+}
+
+const emit = defineEmits(["playerMove", "checkPlayersMove"]);
+const props = defineProps<IGameProps>();
 
 const firstPlayer = () => {
   let firstPlayerTurn = randomPlayer();
   if (firstPlayerTurn === "X") {
-    currentPlayerState.value = playerX;
+    props.game.currentPlayer = props.game.players[0];
   } else {
-    currentPlayerState.value = playerO;
+    props.game.currentPlayer = props.game.players[1];
   }
 };
 
-const playerMove = () => {
-  if (currentPlayerState.value === playerX) {
-    symbolState.value = "X";
-    currentPlayerState.value = playerO;
-  } else {
-    symbolState.value = "O";
-    currentPlayerState.value = playerX;
-  }
-  console.log(symbolState);
-  console.log("clicked");
-};
 firstPlayer();
 </script>
 
 <template>
-  <p>{{ currentPlayerState }}s turn!</p>
-  <div class="game-grid">
-    <div class="box" @click="playerMove" :id="id[0]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[1]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[2]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[3]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[4]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[5]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[6]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[7]">{{ symbolState }}</div>
-    <div class="box" @click="playerMove" :id="id[8]">{{ symbolState }}</div>
+  <div class="box" @click.once="emit('playerMove'), emit('checkPlayersMove')">
+    {{ props.game.gameBoard[index] }}
   </div>
 </template>
 
 <style scoped>
-.game-grid {
-  width: 600px;
-  height: 600px;
-  margin: 0 auto;
-  border: 1px solid black;
-  display: grid;
-  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+.boxSymbol {
+  font-size: x-large;
 }
-
 .box {
   border: 1px solid black;
   font-size: x-large;

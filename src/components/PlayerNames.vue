@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import StartGame from "./StartGame.vue";
 
 const playerXInput = ref("");
 const playerOInput = ref("");
-let clicked = ref(false);
 
-const savePlayersToLs = () => {
-  localStorage.setItem("playerX", playerXInput.value);
-  localStorage.setItem("playerO", playerOInput.value);
-  clicked.value = true;
-};
+const emit = defineEmits(["addPlayers"]);
 </script>
 
 <template>
@@ -21,9 +15,13 @@ const savePlayersToLs = () => {
     <label for="playerO">Enter player O: </label>
     <input type="text" id="playerO" v-model="playerOInput" />
     <br />
-    <button type="button" @click="savePlayersToLs">Continue</button>
+    <button
+      type="button"
+      @click.once="emit('addPlayers', playerXInput, playerOInput)"
+    >
+      Continue
+    </button>
   </form>
-  <StartGame v-if="clicked === true" />
 </template>
 
 <style scoped>

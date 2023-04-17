@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import PlayerNames from "./components/PlayerNames.vue";
+import Game from "./components/Game.vue";
 </script>
 
 <template>
-  <PlayerNames />
+  <Game />
 </template>
 
 <style scoped></style>
